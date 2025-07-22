@@ -1,7 +1,8 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useMemo } from "react";
 import { useInput, useApp } from "ink";
 import { BigDreamAgent, ChatEntry } from "../agent/bigdream-agent";
 import { ConfirmationService } from "../utils/confirmation-service";
+import { loadModelConfig, ModelOption as ConfigModelOption, initUserConfig } from "../utils/model-config";
 
 interface UseInputHandlerProps {
   agent: BigDreamAgent;
@@ -51,15 +52,14 @@ export function useInputHandler({
     { command: "/help", description: "Show help information" },
     { command: "/clear", description: "Clear chat history" },
     { command: "/models", description: "Switch grok Model" },
+    { command: "/config", description: "Manage configuration" },
     { command: "/exit", description: "Exit the application" },
   ];
 
-  const availableModels: ModelOption[] = [
-    { model: "grok-4-latest", description: "Latest grok-4 model (most capable)" },
-    { model: "grok-3-latest", description: "Latest grok-3 model" },
-    { model: "grok-3-fast", description: "Fast grok-3 variant" },
-    { model: "grok-3-mini-fast", description: "Fastest grok-3 variant" }
-  ];
+  // Load models from configuration with fallback to defaults
+  const availableModels: ModelOption[] = useMemo(() => {
+    return loadModelConfig(); // Return directly, interface already matches
+  }, []);
 
   const handleDirectCommand = async (input: string): Promise<boolean> => {
     const trimmedInput = input.trim();
@@ -92,6 +92,7 @@ Built-in Commands:
   /clear      - Clear chat history
   /help       - Show this help
   /models     - Switch BigDream models
+  /config     - Manage configuration
   /exit       - Exit application
   exit, quit  - Exit application
 
@@ -145,6 +146,49 @@ Available models: ${modelNames.join(", ")}`,
         setChatHistory((prev) => [...prev, errorEntry]);
       }
 
+      setInput("");
+      return true;
+    }
+
+    if (trimmedInput === "/config" || trimmedInput === "/config init") {
+      const created = initUserConfig();
+      const configEntry: ChatEntry = {
+        type: "assistant",
+        content: created 
+          ? `✓ Created model configuration template at ~/.bigdream/models.json\n\nYou can now edit this file to customize your available models.`
+          : `Model configuration already exists at ~/.bigdream/models.json\n\nEdit this file to customize your available models.`,
+        timestamp: new Date(),
+      };
+      setChatHistory((prev) => [...prev, configEntry]);
+      setInput("");
+      return true;
+    }
+
+    if (trimmedInput === "/config help") {
+      const configHelpEntry: ChatEntry = {
+        type: "assistant",
+        content: `Configuration Commands:
+  /config        - Initialize model configuration file
+  /config init   - Same as /config
+  /config help   - Show this help
+
+Configuration File:
+  Location: ~/.bigdream/models.json
+  Format: Simple JSON with model names array
+
+Example:
+{
+  "models": [
+    "grok-4-latest",
+    "grok-3-latest", 
+    "claude-sonnet-4-20250514",
+    "gpt-4"
+  ],
+  "defaultModel": "grok-4-latest"
+}`,
+        timestamp: new Date(),
+      };
+      setChatHistory((prev) => [...prev, configHelpEntry]);
       setInput("");
       return true;
     }

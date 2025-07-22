@@ -9,7 +9,6 @@ import { ChatHistory } from "./chat-history";
 import { ChatInput } from "./chat-input";
 import ConfirmationDialog from "./confirmation-dialog";
 import { ConfirmationService, ConfirmationOptions } from "../../utils/confirmation-service";
-import ApiKeyInput from "./api-key-input";
 import cfonts from "cfonts";
 
 interface ChatInterfaceProps {
@@ -183,17 +182,20 @@ function ChatInterfaceWithAgent({ agent }: { agent: BigDreamAgent }) {
   );
 }
 
-// Main component that handles API key input or chat interface
+// Main component that handles missing agent gracefully
 export default function ChatInterface({ agent }: ChatInterfaceProps) {
-  const [currentAgent, setCurrentAgent] = useState<BigDreamAgent | null>(agent || null);
-
-  const handleApiKeySet = (newAgent: BigDreamAgent) => {
-    setCurrentAgent(newAgent);
-  };
-
-  if (!currentAgent) {
-    return <ApiKeyInput onApiKeySet={handleApiKeySet} />;
+  if (!agent) {
+    return (
+      <Box flexDirection="column" padding={1}>
+        <Text color="red">❌ No API key provided</Text>
+        <Text>Please provide an API key using one of these methods:</Text>
+        <Text>• Environment variable: export GROK_API_KEY=your_key</Text>
+        <Text>• Command line: --api-key your_key</Text>
+        <Text>• User settings: ~/.bigdream/user-settings.json</Text>
+        <Text dimColor>Press Ctrl+C to exit</Text>
+      </Box>
+    );
   }
 
-  return <ChatInterfaceWithAgent agent={currentAgent} />;
+  return <ChatInterfaceWithAgent agent={agent} />;
 }

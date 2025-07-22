@@ -37,7 +37,16 @@ npm link
 
 1. Get your BigDream API key from [X.AI](https://x.ai)
 
-2. Set up your API key (choose one method):
+2. **Quick Start (Recommended)**
+   ```bash
+   # First time - API key will be automatically saved
+   bigdream --api-key your_api_key_here
+   
+   # Future usage - no need to provide API key again
+   bigdream
+   ```
+
+3. **Alternative Setup Methods**:
 
 **Method 1: Environment Variable**
 ```bash
@@ -50,12 +59,7 @@ cp .env.example .env
 # Edit .env and add your API key
 ```
 
-**Method 3: Command Line Flag**
-```bash
-bigdream --api-key your_api_key_here
-```
-
-**Method 4: User Settings File**
+**Method 3: Manual User Settings**
 Create `~/.bigdream/user-settings.json`:
 ```json
 {
@@ -65,7 +69,18 @@ Create `~/.bigdream/user-settings.json`:
 
 ### Custom Base URL (Optional)
 
-You can configure a custom BigDream API endpoint (choose one method):
+You can configure a custom BigDream API endpoint:
+
+**Quick Setup:**
+```bash
+# First time - both API key and base URL will be saved
+bigdream --api-key your_key --base-url https://your-custom-endpoint.com/v1
+
+# Future usage - settings are remembered
+bigdream
+```
+
+**Alternative Methods:**
 
 **Method 1: Environment Variable**
 ```bash
@@ -88,14 +103,31 @@ Add to `~/.bigdream/user-settings.json`:
 
 ## Usage
 
-Start the conversational AI assistant:
+### First Time Usage
 ```bash
-bigdream
+# Set up your credentials (saved automatically)
+bigdream --api-key your_api_key_here
+
+# With custom endpoint
+bigdream --api-key your_key --base-url https://api.anthropic.com/v1 --model claude-sonnet-4-20250514
+```
+You'll see confirmation that settings are saved:
+```
+✓ API key saved to ~/.bigdream/user-settings.json
+✓ Base URL saved to ~/.bigdream/user-settings.json
+🤖 Starting BigDream CLI Conversational Assistant...
 ```
 
-Or specify a working directory:
+### Regular Usage
 ```bash
+# Just run without any arguments - settings are remembered
+bigdream
+
+# Or specify a working directory
 bigdream -d /path/to/project
+
+# Override saved settings temporarily
+bigdream --model gpt-4 --base-url https://api.openai.com/v1
 ```
 
 ### Custom Instructions
@@ -118,6 +150,67 @@ Follow the existing code style and patterns in this project.
 ```
 
 BigDream will automatically load and follow these instructions when working in your project directory. The custom instructions are added to BigDream's system prompt and take priority over default behavior.
+
+### CLI Options
+
+BigDream CLI supports various command-line options:
+
+```bash
+# Basic options
+bigdream --api-key <key>              # API key (saved automatically)
+bigdream --base-url <url>             # Custom API endpoint (saved automatically)  
+bigdream --model <model>              # Specify model to use
+bigdream --directory <dir>            # Set working directory
+
+# Combined example
+bigdream --api-key sk-... --base-url https://api.anthropic.com/v1 --model claude-sonnet-4-20250514
+```
+
+**Auto-Save Behavior:**
+- API key and base URL are automatically saved to `~/.bigdream/user-settings.json`
+- Only saves values provided via CLI (not from environment variables)
+- Future runs will use saved settings unless overridden
+
+### Model Configuration
+
+BigDream CLI supports customizing available models through a configuration file. This allows you to add models from different providers like Anthropic, OpenAI, or other compatible APIs.
+
+**Initialize Configuration:**
+```bash
+bigdream  # Start BigDream CLI, then use:
+/config   # Creates ~/.bigdream/models.json template
+```
+
+**Configuration File Format:**
+Create or edit `~/.bigdream/models.json`:
+```json
+{
+  "models": [
+    "grok-4-latest",
+    "grok-3-latest", 
+    "claude-sonnet-4-20250514",
+    "gpt-4"
+  ],
+  "defaultModel": "grok-4-latest"
+}
+```
+
+**Usage with Custom Models:**
+```bash
+# Use specific model via CLI
+bigdream --model claude-sonnet-4-20250514 --base-url https://api.anthropic.com/v1 --api-key your_key
+
+# Switch models during conversation
+/models  # Shows model selection menu
+
+# Or switch directly
+/models claude-sonnet-4-20250514
+```
+
+**Configuration Commands:**
+- `/config` - Initialize configuration file
+- `/config help` - Show configuration help
+- `/models` - Switch between available models
 
 ## Example Conversations
 
