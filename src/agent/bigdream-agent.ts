@@ -1,5 +1,5 @@
-import { GrokClient, GrokMessage, GrokToolCall } from "../grok/client";
-import { GROK_TOOLS } from "../grok/tools";
+import { BigDreamClient, BigDreamMessage, BigDreamToolCall } from "../bigdream/client";
+import { GROK_TOOLS } from "../bigdream/tools";
 import { TextEditorTool, BashTool, TodoTool, ConfirmationTool } from "../tools";
 import { ToolResult } from "../types";
 import { EventEmitter } from "events";
@@ -10,8 +10,8 @@ export interface ChatEntry {
   type: "user" | "assistant" | "tool_result";
   content: string;
   timestamp: Date;
-  toolCalls?: GrokToolCall[];
-  toolCall?: GrokToolCall;
+  toolCalls?: BigDreamToolCall[];
+  toolCall?: BigDreamToolCall;
   toolResult?: { success: boolean; output?: string; error?: string };
   isStreaming?: boolean;
 }
@@ -19,31 +19,31 @@ export interface ChatEntry {
 export interface StreamingChunk {
   type: "content" | "tool_calls" | "tool_result" | "done" | "token_count";
   content?: string;
-  toolCalls?: GrokToolCall[];
-  toolCall?: GrokToolCall;
+  toolCalls?: BigDreamToolCall[];
+  toolCall?: BigDreamToolCall;
   toolResult?: ToolResult;
   tokenCount?: number;
 }
 
-export class GrokAgent extends EventEmitter {
-  private grokClient: GrokClient;
+export class BigDreamAgent extends EventEmitter {
+  private bigdreamClient: BigDreamClient;
   private textEditor: TextEditorTool;
   private bash: BashTool;
   private todoTool: TodoTool;
   private confirmationTool: ConfirmationTool;
   private chatHistory: ChatEntry[] = [];
-  private messages: GrokMessage[] = [];
+  private messages: BigDreamMessage[] = [];
   private tokenCounter: TokenCounter;
   private abortController: AbortController | null = null;
 
   constructor(apiKey: string, baseURL?: string) {
     super();
-    this.grokClient = new GrokClient(apiKey, undefined, baseURL);
+    this.bigdreamClient = new BigDreamClient(apiKey, undefined, baseURL);
     this.textEditor = new TextEditorTool();
     this.bash = new BashTool();
     this.todoTool = new TodoTool();
     this.confirmationTool = new ConfirmationTool();
-    this.tokenCounter = createTokenCounter("grok-4-latest");
+    this.tokenCounter = createTokenCounter("bigdream-4-latest");
 
     // Load custom instructions
     const customInstructions = loadCustomInstructions();
@@ -54,7 +54,7 @@ export class GrokAgent extends EventEmitter {
     // Initialize with system message
     this.messages.push({
       role: "system",
-      content: `You are Grok CLI, an AI assistant that helps with file editing, coding tasks, and system operations.${customInstructionsSection}
+      content: `You are BigDream CLI, an AI assistant that helps with file editing, coding tasks, and system operations.${customInstructionsSection}
 
 You have access to these tools:
 - view_file: View file contents or directory listings
@@ -125,7 +125,7 @@ Current working directory: ${process.cwd()}`,
     let toolRounds = 0;
 
     try {
-      let currentResponse = await this.grokClient.chat(
+      let currentResponse = await this.bigdreamClient.chat(
         this.messages,
         GROK_TOOLS
       );
@@ -135,7 +135,7 @@ Current working directory: ${process.cwd()}`,
         const assistantMessage = currentResponse.choices[0]?.message;
 
         if (!assistantMessage) {
-          throw new Error("No response from Grok");
+          throw new Error("No response from BigDream");
         }
 
         // Handle tool calls
@@ -189,7 +189,7 @@ Current working directory: ${process.cwd()}`,
           }
 
           // Get next response - this might contain more tool calls
-          currentResponse = await this.grokClient.chat(
+          currentResponse = await this.bigdreamClient.chat(
             this.messages,
             GROK_TOOLS
           );
@@ -307,7 +307,7 @@ Current working directory: ${process.cwd()}`,
         }
 
         // Stream response and accumulate
-        const stream = this.grokClient.chatStream(this.messages, GROK_TOOLS);
+        const stream = this.bigdreamClient.chatStream(this.messages, GROK_TOOLS);
         let accumulatedMessage: any = {};
         let accumulatedContent = "";
         let toolCallsYielded = false;
@@ -478,7 +478,7 @@ Current working directory: ${process.cwd()}`,
     }
   }
 
-  private async executeTool(toolCall: GrokToolCall): Promise<ToolResult> {
+  private async executeTool(toolCall: BigDreamToolCall): Promise<ToolResult> {
     try {
       const args = JSON.parse(toolCall.function.arguments);
 
@@ -536,11 +536,11 @@ Current working directory: ${process.cwd()}`,
   }
 
   getCurrentModel(): string {
-    return this.grokClient.getCurrentModel();
+    return this.bigdreamClient.getCurrentModel();
   }
 
   setModel(model: string): void {
-    this.grokClient.setModel(model);
+    this.bigdreamClient.setModel(model);
     // Update token counter for new model
     this.tokenCounter.dispose();
     this.tokenCounter = createTokenCounter(model);

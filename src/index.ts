@@ -4,7 +4,7 @@ import React from "react";
 import { render } from "ink";
 import { program } from "commander";
 import * as dotenv from "dotenv";
-import { GrokAgent } from "./agent/grok-agent";
+import { BigDreamAgent } from "./agent/bigdream-agent";
 import ChatInterface from "./ui/components/chat-interface";
 import * as fs from "fs";
 import * as path from "path";
@@ -22,7 +22,7 @@ function loadApiKey(): string | undefined {
     // Try to load from user settings file
     try {
       const homeDir = os.homedir();
-      const settingsFile = path.join(homeDir, '.grok', 'user-settings.json');
+      const settingsFile = path.join(homeDir, '.bigdream', 'user-settings.json');
       
       if (fs.existsSync(settingsFile)) {
         const settings = JSON.parse(fs.readFileSync(settingsFile, 'utf8'));
@@ -45,7 +45,7 @@ function loadBaseURL(): string | undefined {
     // Try to load from user settings file
     try {
       const homeDir = os.homedir();
-      const settingsFile = path.join(homeDir, '.grok', 'user-settings.json');
+      const settingsFile = path.join(homeDir, '.bigdream', 'user-settings.json');
       
       if (fs.existsSync(settingsFile)) {
         const settings = JSON.parse(fs.readFileSync(settingsFile, 'utf8'));
@@ -60,14 +60,14 @@ function loadBaseURL(): string | undefined {
 }
 
 program
-  .name("grok")
+  .name("bigdream")
   .description(
-    "A conversational AI CLI tool powered by Grok-3 with text editor capabilities"
+    "A conversational AI CLI tool powered by BigDream-3 with text editor capabilities"
   )
   .version("1.0.0")
   .option("-d, --directory <dir>", "set working directory", process.cwd())
-  .option("-k, --api-key <key>", "Grok API key (or set GROK_API_KEY env var)")
-  .option("-u, --base-url <url>", "Grok API base URL (or set GROK_BASE_URL env var)")
+  .option("-k, --api-key <key>", "BigDream API key (or set GROK_API_KEY env var)")
+  .option("-u, --base-url <url>", "BigDream API base URL (or set GROK_BASE_URL env var)")
   .action((options) => {
     if (options.directory) {
       try {
@@ -85,13 +85,13 @@ program
       // Get API key from options, environment, or user settings
       const apiKey = options.apiKey || loadApiKey();
       const baseURL = options.baseUrl || loadBaseURL();
-      const agent = apiKey ? new GrokAgent(apiKey, baseURL) : undefined;
+      const agent = apiKey ? new BigDreamAgent(apiKey, baseURL) : undefined;
 
-      console.log("🤖 Starting Grok CLI Conversational Assistant...\n");
+      console.log("🤖 Starting BigDream CLI Conversational Assistant...\n");
 
       render(React.createElement(ChatInterface, { agent }));
     } catch (error: any) {
-      console.error("❌ Error initializing Grok CLI:", error.message);
+      console.error("❌ Error initializing BigDream CLI:", error.message);
       process.exit(1);
     }
   });

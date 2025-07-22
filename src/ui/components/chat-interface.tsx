@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Box, Text } from "ink";
-import { GrokAgent, ChatEntry } from "../../agent/grok-agent";
+import { BigDreamAgent, ChatEntry } from "../../agent/bigdream-agent";
 import { useInputHandler } from "../../hooks/use-input-handler";
 import { LoadingSpinner } from "./loading-spinner";
 import { CommandSuggestions } from "./command-suggestions";
@@ -13,11 +13,11 @@ import ApiKeyInput from "./api-key-input";
 import cfonts from "cfonts";
 
 interface ChatInterfaceProps {
-  agent?: GrokAgent;
+  agent?: BigDreamAgent;
 }
 
 // Main chat component that handles input when agent is available
-function ChatInterfaceWithAgent({ agent }: { agent: GrokAgent }) {
+function ChatInterfaceWithAgent({ agent }: { agent: BigDreamAgent }) {
   const [chatHistory, setChatHistory] = useState<ChatEntry[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [processingTime, setProcessingTime] = useState(0);
@@ -53,11 +53,11 @@ function ChatInterfaceWithAgent({ agent }: { agent: GrokAgent }) {
 
   useEffect(() => {
     console.clear();
-    cfonts.say("GROK", {
-      font: "3d",
+    cfonts.say("Big Dream", {
+      font: "block",
       align: "left",
       colors: ["magenta", "gray"],
-      space: true,
+      space: false,
       maxLength: "0",
       gradient: ["magenta", "cyan"],
       independentGradient: false,
@@ -69,7 +69,7 @@ function ChatInterfaceWithAgent({ agent }: { agent: GrokAgent }) {
     console.log("1. Ask questions, edit files, or run commands.");
     console.log("2. Be specific for the best results.");
     console.log(
-      "3. Create GROK.md files to customize your interactions with Grok."
+      "3. Create BigDream.md files to customize your interactions with BigDream."
     );
     console.log("4. /help for more information.");
     console.log("");
@@ -185,9 +185,9 @@ function ChatInterfaceWithAgent({ agent }: { agent: GrokAgent }) {
 
 // Main component that handles API key input or chat interface
 export default function ChatInterface({ agent }: ChatInterfaceProps) {
-  const [currentAgent, setCurrentAgent] = useState<GrokAgent | null>(agent || null);
+  const [currentAgent, setCurrentAgent] = useState<BigDreamAgent | null>(agent || null);
 
-  const handleApiKeySet = (newAgent: GrokAgent) => {
+  const handleApiKeySet = (newAgent: BigDreamAgent) => {
     setCurrentAgent(newAgent);
   };
 

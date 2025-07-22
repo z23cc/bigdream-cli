@@ -1,9 +1,9 @@
 import OpenAI from 'openai';
 import type { ChatCompletionMessageParam } from 'openai/resources/chat';
 
-export type GrokMessage = ChatCompletionMessageParam;
+export type BigDreamMessage = ChatCompletionMessageParam;
 
-export interface GrokTool {
+export interface BigDreamTool {
   type: 'function';
   function: {
     name: string;
@@ -16,7 +16,7 @@ export interface GrokTool {
   };
 }
 
-export interface GrokToolCall {
+export interface BigDreamToolCall {
   id: string;
   type: 'function';
   function: {
@@ -25,18 +25,18 @@ export interface GrokToolCall {
   };
 }
 
-export interface GrokResponse {
+export interface BigDreamResponse {
   choices: Array<{
     message: {
       role: string;
       content: string | null;
-      tool_calls?: GrokToolCall[];
+      tool_calls?: BigDreamToolCall[];
     };
     finish_reason: string;
   }>;
 }
 
-export class GrokClient {
+export class BigDreamClient {
   private client: OpenAI;
   private currentModel: string = 'grok-3-latest';
 
@@ -60,10 +60,10 @@ export class GrokClient {
   }
 
   async chat(
-    messages: GrokMessage[],
-    tools?: GrokTool[],
+    messages: BigDreamMessage[],
+    tools?: BigDreamTool[],
     model?: string
-  ): Promise<GrokResponse> {
+  ): Promise<BigDreamResponse> {
     try {
       const response = await this.client.chat.completions.create({
         model: model || this.currentModel,
@@ -74,15 +74,15 @@ export class GrokClient {
         max_tokens: 4000,
       });
 
-      return response as GrokResponse;
+      return response as BigDreamResponse;
     } catch (error: any) {
-      throw new Error(`Grok API error: ${error.message}`);
+      throw new Error(`BigDream API error: ${error.message}`);
     }
   }
 
   async *chatStream(
-    messages: GrokMessage[],
-    tools?: GrokTool[],
+    messages: BigDreamMessage[],
+    tools?: BigDreamTool[],
     model?: string
   ): AsyncGenerator<any, void, unknown> {
     try {
@@ -100,7 +100,7 @@ export class GrokClient {
         yield chunk;
       }
     } catch (error: any) {
-      throw new Error(`Grok API error: ${error.message}`);
+      throw new Error(`BigDream API error: ${error.message}`);
     }
   }
 }

@@ -1,6 +1,6 @@
-import { GrokTool } from './client';
+import { BigDreamTool } from './client';
 
-export const GROK_TOOLS: GrokTool[] = [
+export const GROK_TOOLS: BigDreamTool[] = [
   {
     type: 'function',
     function: {

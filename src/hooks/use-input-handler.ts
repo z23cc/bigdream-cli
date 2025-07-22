@@ -1,10 +1,10 @@
 import { useState, useRef } from "react";
 import { useInput, useApp } from "ink";
-import { GrokAgent, ChatEntry } from "../agent/grok-agent";
+import { BigDreamAgent, ChatEntry } from "../agent/bigdream-agent";
 import { ConfirmationService } from "../utils/confirmation-service";
 
 interface UseInputHandlerProps {
-  agent: GrokAgent;
+  agent: BigDreamAgent;
   chatHistory: ChatEntry[];
   setChatHistory: React.Dispatch<React.SetStateAction<ChatEntry[]>>;
   setIsProcessing: (processing: boolean) => void;
@@ -50,15 +50,15 @@ export function useInputHandler({
   const commandSuggestions: CommandSuggestion[] = [
     { command: "/help", description: "Show help information" },
     { command: "/clear", description: "Clear chat history" },
-    { command: "/models", description: "Switch Grok Model" },
+    { command: "/models", description: "Switch grok Model" },
     { command: "/exit", description: "Exit the application" },
   ];
 
   const availableModels: ModelOption[] = [
-    { model: "grok-4-latest", description: "Latest Grok-4 model (most capable)" },
-    { model: "grok-3-latest", description: "Latest Grok-3 model" },
-    { model: "grok-3-fast", description: "Fast Grok-3 variant" },
-    { model: "grok-3-mini-fast", description: "Fastest Grok-3 variant" }
+    { model: "grok-4-latest", description: "Latest grok-4 model (most capable)" },
+    { model: "grok-3-latest", description: "Latest grok-3 model" },
+    { model: "grok-3-fast", description: "Fast grok-3 variant" },
+    { model: "grok-3-mini-fast", description: "Fastest grok-3 variant" }
   ];
 
   const handleDirectCommand = async (input: string): Promise<boolean> => {
@@ -86,12 +86,12 @@ export function useInputHandler({
     if (trimmedInput === "/help") {
       const helpEntry: ChatEntry = {
         type: "assistant",
-        content: `Grok CLI Help:
+        content: `BigDream CLI Help:
 
 Built-in Commands:
   /clear      - Clear chat history
   /help       - Show this help
-  /models     - Switch Grok models
+  /models     - Switch BigDream models
   /exit       - Exit application
   exit, quit  - Exit application
 

@@ -1,33 +1,33 @@
-# Grok CLI
+# BigDream CLI
 
-A conversational AI CLI tool powered by Grok with intelligent text editor capabilities and tool usage.
+A conversational AI CLI tool powered by BigDream with intelligent text editor capabilities and tool usage.
 
 <img width="980" height="435" alt="Screenshot 2025-07-21 at 13 35 41" src="https://github.com/user-attachments/assets/192402e3-30a8-47df-9fc8-a084c5696e78" />
 
 ## Features
 
-- **🤖 Conversational AI**: Natural language interface powered by Grok-3
+- **🤖 Conversational AI**: Natural language interface powered by BigDream-3
 - **📝 Smart File Operations**: AI automatically uses tools to view, create, and edit files
 - **⚡ Bash Integration**: Execute shell commands through natural conversation
 - **🔧 Automatic Tool Selection**: AI intelligently chooses the right tools for your requests
 - **💬 Interactive UI**: Beautiful terminal interface built with Ink
-- **🌍 Global Installation**: Install and use anywhere with `npm i -g @vibe-kit/grok-cli`
+- **🌍 Global Installation**: Install and use anywhere with `npm i -g @vibe-kit/bigdream-cli`
 
 ## Installation
 
 ### Prerequisites
 - Node.js 16+ 
-- Grok API key from X.AI
+- BigDream API key from X.AI
 
 ### Global Installation (Recommended)
 ```bash
-npm install -g @vibe-kit/grok-cli
+npm install -g @vibe-kit/bigdream-cli
 ```
 
 ### Local Development
 ```bash
 git clone <repository>
-cd grok-cli
+cd bigdream-cli
 npm install
 npm run build
 npm link
@@ -35,7 +35,7 @@ npm link
 
 ## Setup
 
-1. Get your Grok API key from [X.AI](https://x.ai)
+1. Get your BigDream API key from [X.AI](https://x.ai)
 
 2. Set up your API key (choose one method):
 
@@ -52,11 +52,11 @@ cp .env.example .env
 
 **Method 3: Command Line Flag**
 ```bash
-grok --api-key your_api_key_here
+bigdream --api-key your_api_key_here
 ```
 
 **Method 4: User Settings File**
-Create `~/.grok/user-settings.json`:
+Create `~/.bigdream/user-settings.json`:
 ```json
 {
   "apiKey": "your_api_key_here"
@@ -65,7 +65,7 @@ Create `~/.grok/user-settings.json`:
 
 ### Custom Base URL (Optional)
 
-You can configure a custom Grok API endpoint (choose one method):
+You can configure a custom BigDream API endpoint (choose one method):
 
 **Method 1: Environment Variable**
 ```bash
@@ -74,11 +74,11 @@ export GROK_BASE_URL=https://your-custom-endpoint.com/v1
 
 **Method 2: Command Line Flag**
 ```bash
-grok --api-key your_api_key_here --baseurl https://your-custom-endpoint.com/v1
+bigdream --api-key your_api_key_here --baseurl https://your-custom-endpoint.com/v1
 ```
 
 **Method 3: User Settings File**
-Add to `~/.grok/user-settings.json`:
+Add to `~/.bigdream/user-settings.json`:
 ```json
 {
   "apiKey": "your_api_key_here",
@@ -90,25 +90,25 @@ Add to `~/.grok/user-settings.json`:
 
 Start the conversational AI assistant:
 ```bash
-grok
+bigdream
 ```
 
 Or specify a working directory:
 ```bash
-grok -d /path/to/project
+bigdream -d /path/to/project
 ```
 
 ### Custom Instructions
 
-You can provide custom instructions to tailor Grok's behavior to your project by creating a `.grok/GROK.md` file in your project directory:
+You can provide custom instructions to tailor BigDream's behavior to your project by creating a `.bigdream/BigDream.md` file in your project directory:
 
 ```bash
-mkdir .grok
+mkdir .bigdream
 ```
 
-Create `.grok/GROK.md` with your custom instructions:
+Create `.bigdream/BigDream.md` with your custom instructions:
 ```markdown
-# Custom Instructions for Grok CLI
+# Custom Instructions for BigDream CLI
 
 Always use TypeScript for any new code files.
 When creating React components, use functional components with hooks.
@@ -117,11 +117,11 @@ Always add JSDoc comments for public functions and interfaces.
 Follow the existing code style and patterns in this project.
 ```
 
-Grok will automatically load and follow these instructions when working in your project directory. The custom instructions are added to Grok's system prompt and take priority over default behavior.
+BigDream will automatically load and follow these instructions when working in your project directory. The custom instructions are added to BigDream's system prompt and take priority over default behavior.
 
 ## Example Conversations
 
-Instead of typing commands, just tell Grok what you want to do:
+Instead of typing commands, just tell BigDream what you want to do:
 
 ```
 💬 "Show me the contents of package.json"
