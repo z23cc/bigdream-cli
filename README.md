@@ -66,7 +66,7 @@ Create `~/.grok/user-settings.json`:
 
 ### Custom Base URL (Optional)
 
-You can configure a custom Grok API endpoint (choose one method):
+By default, the CLI uses `https://api.x.ai/v1` as the Grok API endpoint. You can configure a custom endpoint if needed (choose one method):
 
 **Method 1: Environment Variable**
 ```bash
@@ -75,7 +75,7 @@ export GROK_BASE_URL=https://your-custom-endpoint.com/v1
 
 **Method 2: Command Line Flag**
 ```bash
-grok --api-key your_api_key_here --baseurl https://your-custom-endpoint.com/v1
+grok --api-key your_api_key_here --base-url https://your-custom-endpoint.com/v1
 ```
 
 **Method 3: User Settings File**
@@ -143,11 +143,50 @@ Add to `~/.grok/user-settings.json`:
 ```json
 {
   "apiKey": "your_api_key_here",
-  "model": "grok-4-latest"
+  "defaultModel": "grok-4-latest"
 }
 ```
 
-Priority order: `--model` flag > `GROK_MODEL` environment variable > user settings > default (grok-4-latest)
+### Adding Custom Models
+
+You can add custom models to your available model list by updating the `models` array in your user settings:
+
+```json
+{
+  "apiKey": "your_api_key_here",
+  "baseURL": "https://your-custom-api-endpoint.com/v1",
+  "defaultModel": "grok-4-latest",
+  "models": [
+    "grok-4-latest",
+    "grok-3-latest",
+    "grok-3-fast",
+    "grok-3-mini-fast",
+    "gemini-2.5-pro",
+    "claude-sonnet-4-20250514",
+    "gpt-4o",
+    "custom-model-name"
+  ]
+}
+```
+
+**Note**: When using non-Grok models, you'll need to:
+1. Set the appropriate `baseURL` for the model's API endpoint
+2. Ensure your API key is valid for that service
+3. Use the correct model name as expected by the target API
+
+**Example for different providers**:
+```bash
+# For Gemini models (Google AI)
+grok --model gemini-2.5-pro --base-url https://generativelanguage.googleapis.com/v1beta
+
+# For OpenAI models
+grok --model gpt-4o --base-url https://api.openai.com/v1
+
+# For Claude models (Anthropic)
+grok --model claude-sonnet-4-20250514 --base-url https://api.anthropic.com/v1
+```
+
+Priority order: `--model` flag > `GROK_MODEL` environment variable > user default model > system default (grok-4-latest)
 
 ### Command Line Options
 
