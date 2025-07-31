@@ -1,10 +1,10 @@
-import { useState, useRef, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { useInput } from "ink";
 import { GrokAgent, ChatEntry } from "../agent/grok-agent";
 import { ConfirmationService } from "../utils/confirmation-service";
-import { updateSetting } from "../utils/settings";
+
 import { filterCommandSuggestions } from "../ui/components/command-suggestions";
-import { loadModelConfig, ModelOption as ConfigModelOption, updateCurrentModel } from "../utils/model-config";
+import { loadModelConfig, updateCurrentModel } from "../utils/model-config";
 
 interface UseInputHandlerProps {
   agent: GrokAgent;
